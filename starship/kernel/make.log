@@ -1,0 +1,42 @@
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include bootblock.S -o bootblock.o
+ld -melf_i386  -Ttext 0 bootblock.o -o bootblock.elf
+objcopy -O binary bootblock.elf bootblock
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include kernelcore.S -o kernelcore.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include main.c -o main.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include console.c -o console.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include page.c -o page.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include keyboard.c -o keyboard.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include mouse.c -o mouse.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include event_queue.c -o event_queue.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include clock.c -o clock.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include interrupt.c -o interrupt.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include kmalloc.c -o kmalloc.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include pic.c -o pic.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include ata.c -o ata.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include cdromfs.c -o cdromfs.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include string.c -o string.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include bitmap.c -o bitmap.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include graphics.c -o graphics.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include font.c -o font.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include syscall_handler.c -o syscall_handler.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include process.c -o process.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include mutex.c -o mutex.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include list.c -o list.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include pagetable.c -o pagetable.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include rtc.c -o rtc.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include kshell.c -o kshell.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include fs.c -o fs.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include hash_set.c -o hash_set.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include diskfs.c -o diskfs.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include serial.c -o serial.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include elf.c -o elf.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include device.c -o device.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include kobject.c -o kobject.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include pipe.c -o pipe.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include bcache.c -o bcache.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include printf.c -o printf.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include is_valid.c -o is_valid.o
+gcc -m32 -Wall -c -ffreestanding -fno-pie -g -std=gnu99 -I ../include window.c -o window.o
+ld -melf_i386  -Ttext 0x10000 kernelcore.o main.o console.o page.o keyboard.o mouse.o event_queue.o clock.o interrupt.o kmalloc.o pic.o ata.o cdromfs.o string.o bitmap.o graphics.o font.o syscall_handler.o process.o mutex.o list.o pagetable.o rtc.o kshell.o fs.o hash_set.o diskfs.o serial.o elf.o device.o kobject.o pipe.o bcache.o printf.o is_valid.o window.o -o kernel.elf
+objcopy -O binary kernel.elf kernel
+cat bootblock kernel /dev/zero | head -c 1474560 > basekernel.img
