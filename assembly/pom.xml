@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.starship</groupId>
+    <artifactId>assembly</artifactId>
+    <version>0.1</version>
+    <packaging>pom</packaging>
+
+    <build>
+        <plugins>
+            <!-- Maven Antrun Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- Create a directory structure for the initramfs -->
+                                <mkdir dir="${project.build.directory}/initramfs-content"/>
+                                <mkdir dir="${project.build.directory}/initramfs-content/bin"/>
+                                <mkdir dir="${project.build.directory}/initramfs-content/dev"/>
+                                <mkdir dir="${project.build.directory}/initramfs-content/etc"/>
+                                <mkdir dir="${project.build.directory}/initramfs-content/proc"/>
+                                <mkdir dir="${project.build.directory}/initramfs-content/sys"/>
+                                <mkdir dir="${project.build.directory}/initramfs-content/tmp"/>
+                                <mkdir dir="${project.build.directory}/initramfs-content/usr/bin"/>
+                                <mkdir dir="${project.build.directory}/initramfs-content/var/log"/>
+
+                                <!-- Add necessary files to initramfs content directory -->
+                                <!-- Example: Adding a busybox binary and creating symlinks -->
+                                <copy file="../busybox/src/main/resources/busybox" tofile="${project.build.directory}/initramfs-content/bin/busybox"/>
+                                <exec executable="ln">
+                                    <arg value="-s"/>
+                                    <arg value="/bin/busybox"/>
+                                    <arg value="${project.build.directory}/initramfs-content/bin/sh"/>
+                                </exec>
+
+                                <!-- More files and directories can be added as needed -->
+
+                                <!-- Create the initramfs image using cpio -->
+                                <exec executable="sh">
+                                    <arg value="-c"/>
+                                    <arg value="cd ${project.build.directory}/initramfs-content &amp;&amp; find . | cpio -o -H newc | gzip > ../initramfs-starship.img"/>
+                                </exec>
+
+                                <!-- Create the starship-iso directory for the Live CD root -->
+                                <mkdir dir="${project.build.directory}/starship-iso/boot/grub"/>
+
+                                <!-- Copy grub.cfg to starship-iso/boot/grub -->
+                                <copy file="../grub/src/boot/grub/grub.cfg" todir="${project.build.directory}/starship-iso/boot/grub"/>
+
+                                <!-- Copy initramfs-starship.img to starship-iso/boot -->
+                                <copy file="${project.build.directory}/initramfs-starship.img" todir="${project.build.directory}/starship-iso/boot"/>
+
+                                <!-- Copy and rename kernel to starship in starship-iso/boot -->
+                                <copy file="../starship/kernel/kernel" tofile="${project.build.directory}/starship-iso/boot/starship"/>
+
+                                <!-- Create ISO image using grub-mkrescue -->
+                                <exec executable="grub-mkrescue">
+                                    <arg value="-o"/>
+                                    <arg value="${project.build.directory}/StarshipOS.iso"/>
+                                    <arg value="${project.build.directory}/starship-iso"/>
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Additional plugins can be added here as needed -->
+        </plugins>
+    </build>
+</project>

@@ -8,6 +8,10 @@
     <version>0.1</version>
   </parent>
 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
   <artifactId>starship</artifactId>
   <packaging>pom</packaging>
 
@@ -19,14 +23,27 @@
         <version>3.0.0</version>
         <executions>
           <execution>
+            <id>clean</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>clean</phase>
+            <configuration>
+              <executable>make</executable>
+              <workingDirectory>./kernel</workingDirectory>
+              <arguments>
+                <argument>clean</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
             <id>compile-c</id>
             <phase>compile</phase>
             <configuration>
-              <executable>gcc</executable>
+              <executable>make</executable>
+              <workingDirectory>./kernel</workingDirectory>
               <arguments>
-                <argument>-o</argument>
-                <argument>native/output</argument>
-                <argument>src/main/c/example.c</argument>
+                <argument>kernel</argument>
               </arguments>
             </configuration>
             <goals>

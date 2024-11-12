@@ -7,10 +7,16 @@
     <packaging>pom</packaging>
     <version>0.1</version>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <modules>
         <module>bootloader</module>
         <module>starship</module>
         <module>jvm</module>
         <module>grub</module>
+        <module>busybox</module>
+        <module>assembly</module>
     </modules>
 </project>

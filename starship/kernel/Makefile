@@ -20,8 +20,8 @@ bootblock.elf: bootblock.o
 %.o: %.c
 	${CC} ${KERNEL_CCFLAGS} -I ../include $< -o $@
 
-%.o: %.S
-	${CC} ${KERNEL_CCFLAGS} -I ../include $< -o $@
+#%.o: %.S
+#	${CC} ${KERNEL_CCFLAGS} -I ../include $< -o $@
 
 clean:
 	rm -rf basekernel.img *.o *.elf kernel bootblock bootblock.o

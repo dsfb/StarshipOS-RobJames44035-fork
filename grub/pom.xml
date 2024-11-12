@@ -8,33 +8,37 @@
         <version>0.1</version>
     </parent>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <artifactId>grub</artifactId>
     <packaging>pom</packaging>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <id>compile-c</id>
-                        <phase>compile</phase>
-                        <configuration>
-                            <executable>gcc</executable>
-                            <arguments>
-                                <argument>-o</argument>
-                                <argument>native/output</argument>
-                                <argument>src/main/c/example.c</argument>
-                            </arguments>
-                        </configuration>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>exec-maven-plugin</artifactId>-->
+<!--                <version>3.0.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>compile-c</id>-->
+<!--                        <phase>compile</phase>-->
+<!--                        <configuration>-->
+<!--                            <executable>gcc</executable>-->
+<!--                            <arguments>-->
+<!--                                <argument>-o</argument>-->
+<!--                                <argument>native/output</argument>-->
+<!--                                <argument>src/main/c/example.c</argument>-->
+<!--                            </arguments>-->
+<!--                        </configuration>-->
+<!--                        <goals>-->
+<!--                            <goal>exec</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 </project>

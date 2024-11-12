@@ -1,0 +1,121 @@
+<project name="BusyBoxBuild" default="main" basedir=".">
+    <!-- Define a property for the BusyBox source URL -->
+    <property name="busybox.url" value="https://busybox.net/downloads/busybox-1.35.0.tar.bz2"/>
+
+    <!-- Define a property for the resource directory -->
+    <property name="resource.dir" value="../busybox/src/main/resources"/>
+
+    <!-- Define a property for the build directory -->
+    <property name="project.build.directory" value="${basedir}/target"/>
+
+    <!-- Define a property for the downloaded BusyBox archive -->
+    <property name="download.dir" value="${project.build.directory}/downloads"/>
+    <property name="busybox.archive" value="${download.dir}/busybox-1.35.0.tar.bz2"/>
+
+    <!-- Define a property for the BusyBox source directory -->
+    <property name="busybox.src.dir" value="${project.build.directory}/busybox-source"/>
+
+    <!-- Check if BusyBox binary exists in the resource directory -->
+    <target name="check-busybox-exists">
+        <available file="${resource.dir}/busybox" property="busybox.exists"/>
+    </target>
+
+    <!-- Download and extract BusyBox if it does not exist -->
+    <target name="download-and-build-busybox" unless="busybox.exists" depends="check-busybox-exists">
+        <mkdir dir="${download.dir}"/>
+        <mkdir dir="${busybox.src.dir}"/>
+        <get src="${busybox.url}" dest="${busybox.archive}"/>
+        <exec executable="tar">
+            <arg value="-xjf"/>
+            <arg value="${busybox.archive}"/>
+            <arg value="-C"/>
+            <arg value="${busybox.src.dir}"/>
+            <arg value="--strip-components=1"/>
+        </exec>
+        <exec dir="${busybox.src.dir}" executable="make">
+            <arg value="defconfig"/>
+        </exec>
+        <exec dir="${busybox.src.dir}" executable="make">
+            <arg value="clean"/>
+        </exec>
+        <exec dir="${busybox.src.dir}" executable="make">
+            <arg value="busybox"/>
+        </exec>
+    </target>
+
+    <!-- Ask for reconfiguration and build if needed -->
+    <target name="reconfigure-busybox">
+        <input message="Do you want to reconfigure BusyBox? [yes/no]" addproperty="reconfig.choice"/>
+        <condition property="reconfig.yes">
+            <equals arg1="${reconfig.choice}" arg2="yes"/>
+        </condition>
+    </target>
+
+    <!-- Reconfigure BusyBox if choice is yes -->
+    <target name="reconfigure-and-build-busybox" if="reconfig.yes" depends="download-and-build-busybox">
+        <exec dir="${busybox.src.dir}" executable="make">
+            <arg value="menuconfig"/>
+        </exec>
+        <exec dir="${busybox.src.dir}" executable="make">
+            <arg value="clean"/>
+        </exec>
+        <exec dir="${busybox.src.dir}" executable="make">
+            <arg value="busybox"/>
+        </exec>
+    </target>
+
+    <!-- Verify that the busybox artifact was built -->
+    <target name="check-busybox-built" depends="reconfigure-and-build-busybox, download-and-build-busybox">
+        <available file="${busybox.src.dir}/busybox" property="busybox.artifact.exists"/>
+    </target>
+
+    <!-- Copy BusyBox binary to the resource directory if the artifact exists -->
+    <target name="copy-busybox" if="busybox.artifact.exists" depends="check-busybox-built">
+        <copy file="${busybox.src.dir}/busybox" tofile="${resource.dir}/busybox"/>
+    </target>
+
+    <!-- Main target that includes all necessary steps -->
+    <target name="main" depends="check-busybox-exists, download-and-build-busybox, reconfigure-busybox, reconfigure-and-build-busybox, check-busybox-built, copy-busybox">
+        <!-- Continue with other steps as defined in the previous build.xml -->
+        <!-- Create a directory structure for the initramfs -->
+        <mkdir dir="${project.build.directory}/initramfs-content"/>
+        <mkdir dir="${project.build.directory}/initramfs-content/bin"/>
+        <mkdir dir="${project.build.directory}/initramfs-content/dev"/>
+        <mkdir dir="${project.build.directory}/initramfs-content/etc"/>
+        <mkdir dir="${project.build.directory}/initramfs-content/proc"/>
+        <mkdir dir="${project.build.directory}/initramfs-content/sys"/>
+        <mkdir dir="${project.build.directory}/initramfs-content/tmp"/>
+        <mkdir dir="${project.build.directory}/initramfs-content/usr/bin"/>
+        <mkdir dir="${project.build.directory}/initramfs-content/var/log"/>
+
+        <!-- Add necessary files to initramfs content directory -->
+        <!-- Example: Adding a busybox binary and creating symlinks -->
+        <copy file="${resource.dir}/busybox" tofile="${project.build.directory}/initramfs-content/bin/busybox"/>
+        <exec executable="ln">
+            <arg value="-s"/>
+            <arg value="/bin/busybox"/>
+            <arg value="${project.build.directory}/initramfs-content/bin/sh"/>
+        </exec>
+
+        <!-- More files and directories can be added as needed -->
+
+        <!-- Create the initramfs image using cpio -->
+        <exec executable="sh">
+            <arg value="-c"/>
+            <arg value="cd ${project.build.directory}/initramfs-content &amp;&amp; find . | cpio -o -H newc | gzip > ../initramfs-starship.img"/>
+        </exec>
+
+        <!-- Continue with other steps as before -->
+        <!-- Create the starship-iso directory for the Live CD root -->
+        <mkdir dir="${project.build.directory}/starship-iso/boot/grub"/>
+
+        <!-- Copy grub.cfg to starship-iso/boot/grub -->
+        <copy file="../grub/src/boot/grub/grub.cfg" todir="${project.build.directory}/starship-iso/boot/grub"/>
+
+        <!-- Copy initramfs-starship.img to starship-iso/boot -->
+        <copy file="${project.build.directory}/initramfs-starship.img" todir="${project.build.directory}/starship-iso/boot"/>
+
+        <!-- Copy and rename kernel to starship in starship-iso/boot -->
+        <copy file="../starship/kernel/kernel" tofile="${project.build.directory}/starship-iso/boot/starship"/>
+    </target>
+</project>
