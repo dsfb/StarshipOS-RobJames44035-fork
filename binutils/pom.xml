@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.starship</groupId>
+        <artifactId>starship-os</artifactId>
+        <version>0.1</version>
+    </parent>
+    <artifactId>binutils</artifactId>
+    <version>0.1</version>
+    <packaging>pom</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>conditional-build-binutils</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>bash</executable>
+                            <arguments>
+                                <argument>-c</argument>
+                                <argument>
+                                    if [ ! -d build ]; then
+                                    mkdir -p target/src &amp;&amp;
+                                    cd target/src &amp;&amp;
+                                    wget https://ftp.gnu.org/gnu/binutils/binutils-2.41.tar.xz &amp;&amp;
+                                    tar -xf binutils-2.41.tar.xz &amp;&amp;
+                                    mkdir -p ../binutils-build &amp;&amp;
+                                    cd ../binutils-build &amp;&amp;
+                                    ../src/binutils-2.41/configure --target=x86_64-elf --prefix=$(pwd)/../../build --with-sysroot --disable-nls --disable-werror &amp;&amp;
+                                    make &amp;&amp;
+                                    make install &amp;&amp;
+                                    cd ../../ &amp;&amp;
+                                    rm -rf target;
+                                    fi
+                                </argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

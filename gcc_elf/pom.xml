@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.starship</groupId>
+        <artifactId>starship-os</artifactId>
+        <version>0.1</version>
+    </parent>
+    <artifactId>gcc_elf</artifactId>
+    <version>0.1</version>
+    <packaging>pom</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>conditional-build-gcc</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>bash</executable>
+                            <arguments>
+                                <argument>-c</argument>
+                                <argument>
+                                    if [ ! -d build ]; then
+                                    BINUTILS_DIR=../binutils/build &amp;&amp;
+                                    mkdir -p target/src &amp;&amp;
+                                    cd target/src &amp;&amp;
+                                    wget https://ftp.gnu.org/gnu/gcc/gcc-13.2.0/gcc-13.2.0.tar.xz &amp;&amp;
+                                    tar -xf gcc-13.2.0.tar.xz &amp;&amp;
+                                    mkdir -p ../gcc-build &amp;&amp;
+                                    cd ../gcc-build &amp;&amp;
+                                    ../src/gcc-13.2.0/configure --target=x86_64-elf --prefix=$(pwd)/../../build --disable-nls --enable-languages=c,c++ --without-headers --with-gmp=/usr/local --with-mpfr=/usr/local --with-mpc=/usr/local &amp;&amp;
+                                    make all-gcc &amp;&amp;
+                                    make install-gcc &amp;&amp;
+                                    make all-target-libgcc &amp;&amp;
+                                    make install-target-libgcc &amp;&amp;
+                                    cd ../../ &amp;&amp; rm -rf target;
+                                    fi
+                                </argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

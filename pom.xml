@@ -12,6 +12,8 @@
     </properties>
 
     <modules>
+        <module>binutils</module>
+        <module>gcc_elf</module>
         <module>bootloader</module>
         <module>starship</module>
         <module>jvm</module>
