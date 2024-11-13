@@ -1,2 +1,3 @@
 /.idea/
 /assembly/target/
+/starship/kernel/kernel.o
