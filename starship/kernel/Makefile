@@ -1,13 +1,17 @@
-include ../Makefile.config
+#include ../Makefile.config
 
 # Define cross compiler
-CROSS_COMPILE = x86_64-elf-
+KERNEL_CCFLAGS=-Wall -c -ffreestanding -fno-pie -g -std=gnu99
+CC=/home/rajames/PROJECTS/StarshipOS/gcc_elf/build/bin/x86_64-elf-cpp
+LD=/home/rajames/PROJECTS/StarshipOS/binutils/build/x86_64-elf/bin/ld -melf_i386
+OBJCOPY=/home/rajames/PROJECTS/StarshipOS/binutils/build/x86_64-elf/bin/objcopy
+#AR=ar
 
 # Update compiler and linker to use cross-compiler
-CC = $(CROSS_COMPILE)gcc
-LD = $(CROSS_COMPILE)ld
-OBJCOPY = $(CROSS_COMPILE)objcopy
-NASM = nasm
+#CC = $(CROSS_COMPILE)gcc
+#LD = $(CROSS_COMPILE)ld
+#OBJCOPY = $(CROSS_COMPILE)objcopy
+#NASM = nasm
 
 KERNEL_SOURCES = kernelcore.c main.c console.c page.c keyboard.c mouse.c event_queue.c \
                  clock.c interrupt.c kmalloc.c pic.c ata.c cdromfs.c string.c bitmap.c \
@@ -30,11 +34,11 @@ multiboot_header.o: multiboot_header.asm
 
 # Compile kernel sources in 64-bit mode
 %.o: %.c
-	$(CC) -m64 -ffreestanding -nostdlib -c $< -o $@
+	$(CC) -m64 -ffreestanding -nostdlib $< -o $@
 
 # Compile minimal kernel in 64-bit mode
 kernel.o: kernel.c
-	$(CC) -m64 -ffreestanding -nostdlib -c kernel.c -o kernel.o
+	$(CC) -m64 -ffreestanding -nostdlib kernel.c -o kernel.o
 
 clean:
 	rm -rf *.bin *.o *.elf

@@ -43,6 +43,7 @@
               <executable>make</executable>
               <workingDirectory>./kernel</workingDirectory>
               <arguments>
+                <argument>-d</argument>
                 <argument>kernel</argument>
               </arguments>
             </configuration>

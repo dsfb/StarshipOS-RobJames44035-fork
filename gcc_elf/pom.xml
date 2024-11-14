@@ -29,15 +29,16 @@
                             <arguments>
                                 <argument>-c</argument>
                                 <argument>
+                                    BINUTILS_DIR=../binutils/build
+                                    export PATH=$BINUTILS_DIR/bin:$PATH
                                     if [ ! -d build ]; then
-                                    BINUTILS_DIR=../binutils/build &amp;&amp;
                                     mkdir -p target/src &amp;&amp;
                                     cd target/src &amp;&amp;
                                     wget https://ftp.gnu.org/gnu/gcc/gcc-13.2.0/gcc-13.2.0.tar.xz &amp;&amp;
                                     tar -xf gcc-13.2.0.tar.xz &amp;&amp;
                                     mkdir -p ../gcc-build &amp;&amp;
                                     cd ../gcc-build &amp;&amp;
-                                    ../src/gcc-13.2.0/configure --target=x86_64-elf --prefix=$(pwd)/../../build --disable-nls --enable-languages=c,c++ --without-headers --with-gmp=/usr/local --with-mpfr=/usr/local --with-mpc=/usr/local &amp;&amp;
+                                    ../src/gcc-13.2.0/configure --target=x86_64-elf --prefix=$(pwd)/../../build --disable-nls --enable-languages=c,c++ --without-headers &amp;&amp;
                                     make all-gcc &amp;&amp;
                                     make install-gcc &amp;&amp;
                                     make all-target-libgcc &amp;&amp;
