@@ -13,7 +13,7 @@ OBJCOPY=/home/rajames/PROJECTS/StarshipOS/binutils/build/x86_64-elf/bin/objcopy
 #OBJCOPY = $(CROSS_COMPILE)objcopy
 #NASM = nasm
 
-KERNEL_SOURCES = kernelcore.c main.c console.c page.c keyboard.c mouse.c event_queue.c \
+KERNEL_SOURCES = kernelcore.S` main.c console.c page.c keyboard.c mouse.c event_queue.c \
                  clock.c interrupt.c kmalloc.c pic.c ata.c cdromfs.c string.c bitmap.c \
                  graphics.c font.c syscall_handler.c process.c mutex.c list.c pagetable.c \
                  rtc.c kshell.c fs.c hash_set.c diskfs.c serial.c elf.c device.c kobject.c \
