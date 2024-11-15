@@ -8,3 +8,6 @@
 /starship/kernel2/kernel.elf
 /starship/kernel2/kernel.o
 /starship/kernel2/multiboot_header.o
+/starship-kernel/kernel/kernel
+/starship-kernel/kernel/kernel.o
+/starship-kernel/starship/starship
