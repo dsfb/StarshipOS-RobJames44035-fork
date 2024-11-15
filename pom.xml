@@ -12,13 +12,13 @@
     </properties>
 
     <modules>
-        <module>binutils</module>
-        <module>gcc_elf</module>
         <module>bootloader</module>
-        <module>starship</module>
-        <module>jvm</module>
         <module>grub</module>
         <module>busybox</module>
-        <module>assembly</module>
+        <module>starship-kernel</module>
+        <module>jvm</module>
+        <module>binutils</module>
+        <module>gcc_elf</module>
+        <module>live_cd</module>
     </modules>
 </project>
