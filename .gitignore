@@ -3,3 +3,8 @@
 /starship/kernel/kernel.o
 /gcc_elf/build/
 /binutils/build/
+/starship/starship/
+/starship/kernel2/kernel.bin
+/starship/kernel2/kernel.elf
+/starship/kernel2/kernel.o
+/starship/kernel2/multiboot_header.o
