@@ -10,13 +10,13 @@
   <packaging>pom</packaging>
 
   <properties>
-    <cross-compiler-path>/home/rajames/PROJECTS/StarshipOS/gcc_elf/build/bin</cross-compiler-path>
-    <bintools-path>/home/rajames/PROJECTS/StarshipOS/binutils/build/x86_64-elf/bin</bintools-path>
+    <cross-compiler-path>../gcc_elf/build/bin</cross-compiler-path>
+    <bintools-path>../binutils/build/x86_64-elf/bin</bintools-path>
     <cc>${cross-compiler-path}/x86_64-elf-gcc</cc>
     <ld>${bintools-path}/ld</ld>
     <objcopy>${bintools-path}/objcopy</objcopy>
     <nasm>nasm</nasm>
-    <kernel-ccflags>-Wall -c -ffreestanding -fno-pie -std=gnu99</kernel-ccflags>
+    <kernel-ccflags>-Wall -c -ffreestanding -fno-pie -std=gnu99 -Iinclude</kernel-ccflags>
   </properties>
 
   <build>

@@ -2,28 +2,22 @@ ENTRY(_start)
 
 SECTIONS
 {
-    . = 1M;
+    . = 0x100000;
 
-    .multiboot_header ALIGN(8) : {
+    .text : {
         *(.multiboot_header)
-    }
-
-    .text ALIGN(8) : {
         *(.text)
     }
 
-    .rodata ALIGN(8) : {
+    .rodata : {
         *(.rodata)
     }
 
-    .data ALIGN(8) : {
+    .data : {
         *(.data)
     }
 
-    .bss ALIGN(8) : {
+    .bss : {
         *(.bss)
-        *(COMMON)
     }
-
-    /DISCARD/ : { *(.eh_frame) }
 }
